@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  tor:
+    build: .
+
+  traefik:
+    image: traefik:v2.7
+    command:
+      - --providers.docker
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  web-app:
+    image: tommoulard/cat
+    labels:
+      # my Tor router
+      traefik.http.routers.web-app-tor.rule: Host(`obz7zd7XXXXX.onion`)
+      # my header middleware
+      traefik.http.middlewares.tor-headers.headers.customresponseheaders.Onion-Location: "http://obz7zd7XXXXX.onion"
+      # my classic router with a middleware
+      traefik.http.routers.web-app-classic.middlewares: tor-headers
+      traefik.http.routers.web-app-classic.rule: Host(`cat.example.org`)

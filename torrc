@@ -1,0 +1,9 @@
+HiddenServiceDir /var/lib/tor/traefik/
+HiddenServicePort 80 traefik:80
+HiddenServicePort 443 traefik:443
+
+HiddenServiceSingleHopMode 1
+HiddenServiceNonAnonymousMode 1
+
+SocksPolicy reject *
+SocksPort 0
